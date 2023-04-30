@@ -1,10 +1,75 @@
-import { GlobalStyle } from "GlobalStyle";
+import { Component } from 'react';
+import { GlobalStyle } from 'GlobalStyle';
+import { Container } from './App.styled';
+import * as API from 'searchApi/SearchApi';
+import { Searchbar } from 'components/Searchbar/Searchbar';
+import { ImageGallery } from 'components/ImageGallery/ImageGallery';
+import { Loader } from 'components/Loader/Loader';
+import { Button } from 'components/Button/Button';
 
-export const App = () => {
-  return (
-    <
-    >
-      <GlobalStyle></GlobalStyle>
-    </>
-  );
-};
+const API_KEY = '34522335-c076a0351c3b24c3689abfb26';
+export class App extends Component {
+  state = {
+    galleryItem: [],
+    searchValue: '',
+    page: 1,
+    totalImgs: 0,
+    status: 'idle',
+  };
+  async componentDidUpdate(prevProps, prevState) {
+    const { searchValue, page } = this.state;
+    if (prevState.searchValue !== searchValue || prevState.page !== page) {
+      this.setState({ status: 'pending' });
+      try {
+        const res = await API.searchImgs(searchValue, API_KEY, page);
+        if (res.totalHits === 0) {
+          return this.setState({
+            status: 'rejected',
+          });
+        }
+        this.setState(e => ({
+          galleryItem: [...e.galleryItem, ...res.hits],
+          totalImgs: res.totalHits,
+          status: 'resolved',
+        }));
+      } catch (error) {
+        this.setState({
+          status: 'rejected',
+        });
+      }
+    }
+  }
+  onSubmit = values => {
+    if (values.search === this.state.searchValue) {
+      return;
+    }
+    this.setState({ searchValue: values.search, galleryItem: [], page: 1 });
+  };
+  onLoadMore = () => {
+    this.setState(e => ({ page: e.page + 1 }));
+  };
+  render() {
+    const { galleryItem, searchValue, totalImgs, status } = this.state;
+    return (
+      <Container>
+        <GlobalStyle></GlobalStyle>
+        <Searchbar onSubmit={this.onSubmit} />
+        {status === 'idle' && <p>Please enter</p>}
+        {status === 'rejected' && (
+          <p>Sorry, no resukt at your request "{searchValue}"</p>
+        )}
+        <ImageGallery
+          items={galleryItem}
+          status={status}
+          searchValue={searchValue}
+        />
+        {status === 'pending' && <Loader></Loader>}
+        {galleryItem.length !== 0 &&
+          totalImgs > 12 &&
+          galleryItem.length % 2 === 0 && (
+            <Button onClick={this.onLoadMore}></Button>
+          )}
+      </Container>
+    );
+  }
+}
