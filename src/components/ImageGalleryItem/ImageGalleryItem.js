@@ -15,12 +15,16 @@ export class ImageGalleryItem extends Component {
     this.setState({ selectedImg: null });
   };
   render() {
-     const { selectedImg } = this.state;
+    const { selectedImg } = this.state;
     const { item } = this.props;
     return (
-      <Item >
-        <Image src={item.webformatURL} alt={item.tags} onClick={this.setSelectedImg}/>
-         <ModalImg
+      <Item>
+        <Image
+          src={item.webformatURL}
+          alt={item.tags}
+          onClick={this.setSelectedImg}
+        />
+        <ModalImg
           isOpen={selectedImg !== null}
           onClose={this.closeModal}
           image={selectedImg}

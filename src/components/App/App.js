@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { GlobalStyle } from 'GlobalStyle';
-import { Container } from './App.styled';
+import { Container, StartText } from './App.styled';
 import * as API from 'searchApi/SearchApi';
 import { Searchbar } from 'components/Searchbar/Searchbar';
 import { ImageGallery } from 'components/ImageGallery/ImageGallery';
@@ -54,9 +54,11 @@ export class App extends Component {
       <Container>
         <GlobalStyle></GlobalStyle>
         <Searchbar onSubmit={this.onSubmit} />
-        {status === 'idle' && <p>Please enter</p>}
+        {status === 'idle' && <StartText>Please enter your request</StartText>}
         {status === 'rejected' && (
-          <p>Sorry, no resukt at your request "{searchValue}"</p>
+          <StartText>
+            Sorry, no result at your request "{searchValue}"
+          </StartText>
         )}
         <ImageGallery
           items={galleryItem}

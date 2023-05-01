@@ -1,7 +1,12 @@
-import { Formik, Form, Field } from 'formik';
+import { Field, Formik } from 'formik';
 import { AiOutlineSearch } from 'react-icons/ai';
 import PropTypes from 'prop-types';
-
+import {
+  Header,
+  Form,
+  SerchButton,
+  SearchFormButtonLabel,
+} from './Searchbar.styled';
 export const Searchbar = ({ onSubmit }) => {
   const handleSubmit = async (values, { setSubmitting }) => {
     await onSubmit(values);
@@ -9,19 +14,17 @@ export const Searchbar = ({ onSubmit }) => {
   };
 
   return (
-    <header>
+    <Header>
       <Formik initialValues={{ search: '' }} onSubmit={handleSubmit}>
         {({ isSubmitting }) => (
-          <Form  autoComplete="off">
-            <button
-              type="submit"
-              disabled={isSubmitting}
-            >
-              <span>
+          <Form autoComplete="off">
+            <SerchButton type="submit" disabled={isSubmitting}>
+              <SearchFormButtonLabel>
                 <AiOutlineSearch />
-              </span>
-            </button>
+              </SearchFormButtonLabel>
+            </SerchButton>
             <Field
+              className="SearchForm-input"
               name="search"
               type="text"
               placeholder="Search images and photos"
@@ -29,11 +32,9 @@ export const Searchbar = ({ onSubmit }) => {
           </Form>
         )}
       </Formik>
-    </header>
+    </Header>
   );
 };
-
-
 
 Searchbar.propTypes = {
   onSubmit: PropTypes.func.isRequired,
