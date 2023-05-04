@@ -3,7 +3,7 @@ import { Component } from 'react';
 import { ModalImg } from 'components/ModalImg/ModalImg';
 import { Item, Image } from './ImageGalleryItem.styled';
 export class ImageGalleryItem extends Component {
-  state = {
+ state = {
     selectedImg: null,
   };
 
@@ -18,19 +18,20 @@ export class ImageGalleryItem extends Component {
     const { selectedImg } = this.state;
     const { item } = this.props;
     return (
+      <div>
       <Item>
         <Image
           src={item.webformatURL}
           alt={item.tags}
           onClick={this.setSelectedImg}
-        />
+        /></Item>
         <ModalImg
           isOpen={selectedImg !== null}
           onClose={this.closeModal}
           image={selectedImg}
           alt={item.tags}
         />
-      </Item>
+      </div>
     );
   }
 }
